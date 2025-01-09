@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import path from 'path';
 import fileUpload from 'express-fileupload'
+import cors from 'cors'
 
 interface Options {
   port: number;
@@ -35,6 +36,13 @@ export class Server {
     this.app.use(fileUpload({
       limits: { fileSize: 50 * 1024 * 1024 },
     }));
+
+    this.app.use(cors({
+      origin: 'http://localhost:5173', // Cambia según el origen del cliente
+      methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+      credentials: true, // Si necesitas enviar cookies o cabeceras con credenciales
+    }));
+  
 
     //* Public Folder
     this.app.use( express.static( this.publicPath ) );
