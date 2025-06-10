@@ -29,8 +29,13 @@ export class AuthController {
         if(error) return res.status(400).json({error})
 
         new RegisterUser(this.authRepository).execute(registerDto!)
+            .then((userData) => {
+                const {password, ...userDataWithoutPassword} = userData.userEntity;
+                res.json({user: userDataWithoutPassword, token: userData.token});
+            })
+            .catch( error => this.handleError(error, res) );
 
-        res.send(registerDto);
+     
 /*    
         this.authService.registerUser(registerDto!)
             .then((user) => res.json(user))

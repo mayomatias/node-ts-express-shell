@@ -3,7 +3,7 @@ import { RegisterUserDTO } from '../../dto/auth/register-user.dto';
 import { UserEntity } from '../../entities/user.entity';
 
 interface RegisterUserUseCase {
-  execute(dto: RegisterUserDTO): Promise<UserEntity>;
+  execute(dto: RegisterUserDTO): Promise<{userEntity: UserEntity, token: string}>;
 }
 
 export class RegisterUser implements RegisterUserUseCase {
@@ -11,7 +11,7 @@ export class RegisterUser implements RegisterUserUseCase {
   constructor(private readonly authRepository: AuthRepositoryImpl) {}
 
 
-  async execute(dto: RegisterUserDTO): Promise<UserEntity> {
+  async execute(dto: RegisterUserDTO): Promise<{userEntity: UserEntity, token: string}> {
     
     const res = await this.authRepository.register(dto);
 
@@ -19,11 +19,13 @@ export class RegisterUser implements RegisterUserUseCase {
       throw new Error('Registration failed: response is null');
     }
     const { user, token } = res;
-
-    //Retornar user sin password y del tipo UserEntity
-    const userEntity = UserEntity.fromObject(user)
     
+    
+    const userEntity = UserEntity.fromObject(user)
 
-    return userEntity;
+
+    
+    // await this.userRepository.create(user);
+    return {userEntity, token};
   }
 }

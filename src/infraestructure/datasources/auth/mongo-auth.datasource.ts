@@ -25,9 +25,9 @@ export class MongoAuthDatasource implements AuthDatasource {
 
         try {
             
-            const user = new UserModel(registerUserDto)
+            const user = new UserModel(registerUserDto);
             
-            console.log("tipo de user", typeof user);
+
             
             //Aqui faltan pasos
             //Encriptar contraseña
