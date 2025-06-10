@@ -1,5 +1,5 @@
 import { CreateExpenseDTO } from '../../dto/expense/create-expense.dto';
-import { ExpenseEntity } from '../../entities/expense/expense';
+import { ExpenseEntity } from '../../entities/expense.entity';
 
 interface CreateExpenseUseCase {
   execute(dto: CreateExpenseDTO): Promise<ExpenseEntity>;

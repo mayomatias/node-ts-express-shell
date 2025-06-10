@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { ExpenseRoutes } from './expense/expense.routes';
+import { AuthRoutes } from './auth/auth.routes';
 
 
 
@@ -13,6 +14,7 @@ export class AppRoutes {
     
     // Definir las rutas
     router.use('/api/expense', ExpenseRoutes.routes);
+    router.use('/api/auth', AuthRoutes.routes);
     
 
 
