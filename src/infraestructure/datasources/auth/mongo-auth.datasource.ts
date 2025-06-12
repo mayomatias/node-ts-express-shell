@@ -6,16 +6,23 @@ import { RegisterUserDTO } from '../../../domain/dto/auth/register-user.dto';
 import { CustomError } from '../../../domain/errors/custom.error';
 
 export class MongoAuthDatasource implements AuthDatasource {
-  async login(email: string, password: string): Promise<any> {
-    const user = await UserModel.findOne({
-      email,
-      password, // In a real application, ensure to hash the password before storing and comparing
-    });
-    if (!user) {
-      throw new Error('Invalid email or password');
-    }
-    // Return the user as a UserEntity instance
-    return undefined;
+  async login(email: string, password: string): Promise<({ user: any; token: JwtAdapter })> {
+    const existUser = await UserModel.findOne({email});
+    if (!existUser) throw CustomError.badRequest('User or password incorrect.')
+    
+      if (BcryptsAdapter.compare(password, existUser.password)) {
+                        
+            const token = await JwtAdapter.generateToken({ id: existUser.id, email: existUser.email });
+            if(!token) throw CustomError.internalServer('Error while creating JWT');
+
+            return {
+                user: existUser,
+                token: token
+            }
+
+        }
+        
+        throw CustomError.badRequest('User or password incorrect.');
   }
 
   async register(registerUserDto: RegisterUserDTO): Promise<(any | null)> {
@@ -26,8 +33,6 @@ export class MongoAuthDatasource implements AuthDatasource {
         try {
             
             const user = new UserModel(registerUserDto);
-            
-
             
             //Aqui faltan pasos
             //Encriptar contraseña
@@ -49,8 +54,6 @@ export class MongoAuthDatasource implements AuthDatasource {
             
             // Email de confirmación 
             // this.sendEmailWithValidationLink(user.email)
-
-          
 
             return {
                 user: userFromMongo,

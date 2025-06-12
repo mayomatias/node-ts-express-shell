@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-//import { AuthService } from '../services/auth.service';
 import { CustomError } from '../../domain/errors/custom.error';
 import { RegisterUserDTO } from '../../domain/dto/auth/register-user.dto';
 import { LoginUserDTO } from '../../domain/dto/auth/login-user.dto';
-import { RegisterUser } from '../../domain/use-cases/auth/register-user';
 import { AuthRepositoryImpl } from '../../infraestructure/repositories/auth/auth.repository.impl';
 import { MongoAuthDatasource } from '../../infraestructure/datasources/auth/mongo-auth.datasource';
+import { LoginUser, RegisterUser } from '../../domain/use-cases/auth';
+
+
 
 export class AuthController {
 
@@ -35,21 +36,19 @@ export class AuthController {
             })
             .catch( error => this.handleError(error, res) );
 
-     
-/*    
-        this.authService.registerUser(registerDto!)
-            .then((user) => res.json(user))
-            .catch( error => this.handleError(error, res) );
- */
     }
 
     loginUser = (req: Request, res: Response) => {
         const[error, loginDto] = LoginUserDTO.create(req.body)
         if(error) return res.status(400).json({error})
+        
+        new LoginUser(this.authRepository).execute(loginDto!)
+            .then((userData) => {
+                const {password, ...userDataWithoutPassword} = userData.userEntity;
+                res.json({user: userDataWithoutPassword, token: userData.token});
+            })
+            .catch( error => this.handleError(error, res) );
 
-/*         this.authService.loginUser(loginDto!)
-            .then((user) => res.json(user))
-            .catch( error => this.handleError(error, res) ); */
     }
     
     validateMail = (req: Request, res: Response) => {

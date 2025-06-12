@@ -1,9 +1,10 @@
 import { AuthDatasource } from '../../../domain/datasources/auth/auth.datasource';
 import { RegisterUserDTO } from '../../../domain/dto/auth/register-user.dto';
 import { UserEntity } from '../../../domain/entities/user.entity';
+import { AuthRepository } from '../../../domain/repository/auth/expense.repository';
 
 
-export class AuthRepositoryImpl {
+export class AuthRepositoryImpl implements AuthRepository {
   // This class implements the AuthRepository interface, providing concrete methods for authentication operations.
   // It uses an AuthDatasource to perform the actual data operations, allowing for separation of concerns.
   // The methods include login, register, logout, and getCurrentUser, which interact with the datasource to perform the necessary actions.
@@ -12,7 +13,7 @@ export class AuthRepositoryImpl {
   
   constructor(private readonly authDatasource: AuthDatasource) {}
 
-  async login(email: string, password: string): Promise<UserEntity> {
+  async login(email: string, password: string): Promise<{ user: UserEntity; token: any } | null> {
     return this.authDatasource.login(email, password);
   }
 

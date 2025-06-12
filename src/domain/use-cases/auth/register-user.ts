@@ -20,12 +20,8 @@ export class RegisterUser implements RegisterUserUseCase {
     }
     const { user, token } = res;
     
-    
     const userEntity = UserEntity.fromObject(user)
-
-
     
-    // await this.userRepository.create(user);
     return {userEntity, token};
   }
 }
