@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { ExpenseRoutes } from './expense/expense.routes';
-import { AuthRoutes } from './auth/auth.routes';
+import { AuthRoutes } from './controller/auth/auth.routes';
+import { ExpenseRoutes } from './controller/expense/expense.routes';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 
 
@@ -13,8 +14,8 @@ export class AppRoutes {
     const router = Router();
     
     // Definir las rutas
-    router.use('/api/expense', ExpenseRoutes.routes);
     router.use('/api/auth', AuthRoutes.routes);
+    router.use('/api/expense', [AuthMiddleware.validateJWT],ExpenseRoutes.routes);
     
 
 

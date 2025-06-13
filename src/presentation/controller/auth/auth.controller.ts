@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { CustomError } from '../../domain/errors/custom.error';
-import { RegisterUserDTO } from '../../domain/dto/auth/register-user.dto';
-import { LoginUserDTO } from '../../domain/dto/auth/login-user.dto';
-import { AuthRepositoryImpl } from '../../infraestructure/repositories/auth/auth.repository.impl';
-import { MongoAuthDatasource } from '../../infraestructure/datasources/auth/mongo-auth.datasource';
-import { LoginUser, RegisterUser } from '../../domain/use-cases/auth';
 
+import { CustomError } from '../../../domain/errors/custom.error';
+import { RegisterUserDTO, LoginUserDTO } from '../../../domain/dto/auth';
+import { LoginUser, RegisterUser } from '../../../domain/use-cases/auth';
+
+import { MongoAuthDatasource } from '../../../infraestructure/datasources/auth/mongo-auth.datasource';
+import { AuthRepositoryImpl } from '../../../infraestructure/repositories/auth/auth.repository.impl';
 
 
 export class AuthController {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { CreateExpense } from '../../domain/use-cases/expense/create-expense';
-import { CreateExpenseDTO } from '../../domain/dto/expense/create-expense.dto';
+import { CreateExpense } from '../../../domain/use-cases/expense/create-expense';
+import { CreateExpenseDTO } from '../../../domain/dto/expense/create-expense.dto';
 
 export class ExpenseController {
 
@@ -10,6 +10,8 @@ export class ExpenseController {
     if (error) {
       return res.status(400).json({ error });
     }
+    console.log(req);
+    
     // Call the use case to create the expense
 
     new CreateExpense()

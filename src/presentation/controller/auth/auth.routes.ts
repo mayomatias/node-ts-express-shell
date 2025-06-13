@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import { AuthController } from './auth.controller';
 
-import { envs } from '../../config/envs';
-
 
 export class AuthRoutes {
   static get routes(): Router {
