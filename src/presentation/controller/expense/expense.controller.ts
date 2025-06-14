@@ -1,23 +1,40 @@
 import { Request, Response } from 'express';
 import { CreateExpense } from '../../../domain/use-cases/expense/create-expense';
 import { CreateExpenseDTO } from '../../../domain/dto/expense/create-expense.dto';
+import { MongoExpenseDatasource } from '../../../infraestructure/datasources/expense/mongo-expense.datasource';
+import { ExpenseRepositoryImpl } from '../../../infraestructure/repositories/expense/expense.repository.impl';
+import { CustomError } from '../../../domain/errors/custom.error';
 
 export class ExpenseController {
 
-  async createExpense(req: Request, res: Response){
+  private readonly mongoExpenseDatasource = new MongoExpenseDatasource();
+  private readonly expenseRepository = new ExpenseRepositoryImpl(this.mongoExpenseDatasource)  
+
+  private handleError = (error: unknown, res: Response ) => {
+      if ( error instanceof CustomError ) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+  
+      console.log(`${ error }`);
+      return res.status(500).json({ error: 'Internal server error' })
+  } 
+
+  createExpense = async (req: Request, res: Response) => {
+
+
 
     const [error, createExpenseDTO] = CreateExpenseDTO.create(req.body)
     if (error) {
       return res.status(400).json({ error });
     }
-    console.log(req);
     
     // Call the use case to create the expense
 
-    new CreateExpense()
+
+    new CreateExpense(this.expenseRepository)
       .execute(createExpenseDTO!)
       .then(expense => res.json(expense))
-      .catch(error => res.status(400).json({error}))
+      .catch( error => this.handleError(error, res))
 
   }
 

@@ -25,8 +25,8 @@ export class AuthMiddleware {
             if (!user) return res.status(401).json({error: 'Invalid token - user'}) 
             
             //TODO: Valorar si el usuario esta activo
-            
-            req.body.user = UserEntity.fromObject(user) //Cargo el usuario en elbody de la req y quiero que sea desde mi entidad
+            const {password, ...restOfUser} = UserEntity.fromObject(user)
+            req.body.user =  restOfUser//Cargo el usuario en elbody de la req y quiero que sea desde mi entidad
             
             next()
 

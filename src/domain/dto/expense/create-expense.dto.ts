@@ -1,33 +1,33 @@
 export class CreateExpenseDTO {
 
-  public readonly id: string;
   public readonly amount: number;
   public readonly description: string;
   public readonly date: Date;
   public readonly category: string;
-  // The CreateExpenseDTO class is used to transfer data for creating a new expense.
-  // It encapsulates the necessary properties required to create an expense entity.
-  // This class is typically used in the context of a use case or service that handles the creation of expenses.
-  // It includes properties such as id, amount, description, date, and category.
-  // The constructor is private to enforce the use of the static create method for instantiation. 
 
+  public readonly createdBy: string; //user who created the expense
+  public readonly groupId?: string; //can be null
+  public readonly asignatedTo?: string; // its noGroup
 
-  private constructor(id: string, amount: number, description: string, date: Date, category: string) {
-    this.id = id;
+  private constructor( amount: number, description: string, date: Date, category: string, createdBy: string, groupId?: string, asignatedTo?: string) {
     this.amount = amount;
     this.description = description;
     this.date = date;
     this.category = category;
+    this.createdBy = createdBy;
+    this.groupId = groupId;
+    this.asignatedTo = asignatedTo;
   }
 
   public static create(props: {[key: string]: any}): [string?, CreateExpenseDTO?] {
-    
-    
-    const { id, amount, description, date, category } = props;
+      
+    const createdBy = props.user?.id;
+    const asignatedTo = props.user?.id;
+    const { amount, description, date, category, groupId } = props;
 
 
-    if (!id || !amount || !description || !date || !category) {
-      return ['All fields are required', undefined];
+    if (!createdBy || !amount || !description || !date || !category) {
+      return ['-All fields are required', undefined];
     }
     if (typeof amount !== 'number' || amount <= 0) {
       return ['Amount must be a positive number', undefined];
@@ -43,7 +43,7 @@ export class CreateExpenseDTO {
     }
     // If all validations pass, create and return a new CreateExpenseDTO instance
     
-    return [undefined ,new CreateExpenseDTO(id, amount, description, date, category)];
+    return [undefined ,new CreateExpenseDTO(amount, description, date, category, createdBy, groupId, asignatedTo)];
   }
 
 }
